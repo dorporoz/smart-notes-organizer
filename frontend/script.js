@@ -55,7 +55,7 @@ const toast = document.getElementById("toast");
 // ---------- API helpers ----------
 
 async function apiRequest(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
