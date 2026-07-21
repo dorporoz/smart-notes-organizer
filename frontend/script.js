@@ -10,7 +10,7 @@
 
 // Change this if your backend runs somewhere else (e.g. after
 // deploying to Render, point this at your Render URL).
-const API_BASE_URL = "http://localhost:5000/api";
+const API_URL = "https://smart-notes-organizer-t2rw.onrender.com";
 
 // ---------- App state ----------
 let currentCategory = "All";
