@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Notes Organizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="logo-dot"></span>
+      <h1 class="app-title">Smart Notes Organizer</h1>
+    </div>
+
+    <div class="topbar__center">
+      <div class="search-box">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search notes by title (Trie prefix search)…"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <div class="topbar__right">
+      <button id="undoBtn" class="btn btn--ghost" title="Undo last delete">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 14 4 9 9 4"></polyline>
+          <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"></path>
+        </svg>
+        Undo
+      </button>
+      <button id="addNoteBtn" class="btn btn--primary">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Note
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN LAYOUT ================= -->
+  <main class="layout">
+
+    <!-- Statistics -->
+    <section class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <span class="stat-card__label">Total Notes</span>
+        <span class="stat-card__value" id="statTotal">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__label">Categories</span>
+        <span class="stat-card__value" id="statCategories">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__label">Recently Viewed</span>
+        <span class="stat-card__value" id="statRecent">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card__label">Deleted Stack Size</span>
+        <span class="stat-card__value" id="statDeleted">0</span>
+      </div>
+    </section>
+
+    <div class="content-grid">
+
+      <!-- Left Sidebar -->
+      <aside class="sidebar">
+        <h2 class="sidebar__title">Categories</h2>
+        <ul class="category-list" id="categoryList">
+          <li class="category-item category-item--active" data-category="All">All Notes</li>
+          <li class="category-item" data-category="Study">Study</li>
+          <li class="category-item" data-category="Personal">Personal</li>
+          <li class="category-item" data-category="Work">Work</li>
+          <li class="category-item" data-category="Ideas">Ideas</li>
+          <li class="category-item" data-category="Other">Other</li>
+        </ul>
+
+        <h2 class="sidebar__title sidebar__title--spaced">Recently Viewed</h2>
+        <ul class="recent-list" id="recentList">
+          <li class="recent-empty">Nothing viewed yet</li>
+        </ul>
+
+        <h2 class="sidebar__title sidebar__title--spaced">DSA Operations</h2>
+        <div class="dsa-panel" id="dsaPanel">
+          <p class="dsa-panel__empty">Perform an action to see it here.</p>
+        </div>
+      </aside>
+
+      <!-- Right Side: Notes Grid -->
+      <section class="notes-section">
+        <div class="notes-grid" id="notesGrid">
+          <!-- Note cards are rendered here by script.js -->
+        </div>
+        <p class="empty-state" id="emptyState" hidden>
+          No notes found. Try a different search or category, or add a new note.
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================= ADD / EDIT NOTE MODAL ================= -->
+  <div class="modal-overlay" id="modalOverlay" hidden>
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="modalTitle">Add Note</h2>
+        <button class="modal__close" id="modalClose">&times;</button>
+      </div>
+
+      <form id="noteForm" class="modal__form">
+        <input type="hidden" id="noteId" />
+
+        <label class="form-label" for="noteTitle">Title</label>
+        <input
+          type="text"
+          id="noteTitle"
+          class="form-input"
+          placeholder="e.g. Java Notes"
+          required
+        />
+
+        <label class="form-label" for="noteCategory">Category</label>
+        <select id="noteCategory" class="form-input">
+          <option value="Study">Study</option>
+          <option value="Personal">Personal</option>
+          <option value="Work">Work</option>
+          <option value="Ideas">Ideas</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label class="form-label" for="noteContent">Content</label>
+        <textarea
+          id="noteContent"
+          class="form-input form-textarea"
+          placeholder="Write your note here…"
+          rows="6"
+        ></textarea>
+
+        <div class="modal__actions">
+          <button type="button" class="btn btn--ghost" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn--primary" id="saveBtn">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= VIEW NOTE MODAL ================= -->
+  <div class="modal-overlay" id="viewOverlay" hidden>
+    <div class="modal">
+      <div class="modal__header">
+        <h2 id="viewTitle">Note</h2>
+        <button class="modal__close" id="viewClose">&times;</button>
+      </div>
+      <div class="modal__view-body">
+        <span class="badge" id="viewCategory">Study</span>
+        <p class="view-meta" id="viewDates"></p>
+        <p class="view-content" id="viewContent"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

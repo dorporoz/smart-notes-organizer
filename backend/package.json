@@ -1,0 +1,17 @@
+{
+  "name": "smart-notes-organizer-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Smart Notes Organizer - a DSA-focused notes app using HashMap, Trie, Stack, and Queue",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["dsa", "data-structures", "express", "notes"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
